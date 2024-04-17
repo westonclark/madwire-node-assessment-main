@@ -22,6 +22,7 @@ import {
   deleteEmployee,
   editEmployee,
   getEmployee,
+  getEmployees,
 } from './service';
 
 const createEmployeeOptions = {
@@ -43,9 +44,12 @@ const getEmployeesOptions = {
     request: FastifyRequestTypebox<typeof this.schema>,
     reply: FastifyReplyTypebox<typeof this.schema>
   ) {
-    throw new Error('Unimplemented');
+    const employees = await getEmployees();
+
+    reply.send(employees.map((employee) => forResponse(employee)));
   },
 };
+
 const getEmployeeOptions = {
   schema: getEmployeeSchema,
   async handler(

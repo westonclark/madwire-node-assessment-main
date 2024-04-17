@@ -3,8 +3,13 @@ import {
   getEmployeeByNumber,
   insertEmployee,
   saveEmployee,
+  getEmployeesByTitle,
 } from './mysql';
 import { Employee, EmployeePatch, NewEmployee } from './types';
+
+export async function getEmployees(): Promise<Employee[]> {
+  return getEmployeesByTitle();
+}
 
 export async function getEmployee(employeeNumber: number): Promise<Employee> {
   return getEmployeeByNumber(employeeNumber);

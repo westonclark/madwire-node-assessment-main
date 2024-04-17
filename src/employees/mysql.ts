@@ -33,6 +33,16 @@ function forDb(emp: Employee): EmployeeModel {
   };
 }
 
+export async function getEmployeesByTitle(): Promise<Employee[]> {
+  const employees = await db<EmployeeModel>('employees').select('*').limit(10);
+
+  if (!employees || employees.length == 0) {
+    throw new ResourceNotFoundError('employees not found');
+  }
+
+  return employees.map((employee) => fromDb(employee));
+}
+
 export async function getEmployeeByNumber(
   employeeNumber: number
 ): Promise<Employee> {
