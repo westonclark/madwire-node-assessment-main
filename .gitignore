@@ -1,0 +1,13 @@
+# Dependencies
+node_modules
+
+# Generated output
+build
+mysqldata
+coverage
+
+# Credentials/secrets
+.env
+docker/**/.npmrc
+/secrets.lock
+/.localsecretclasses

@@ -1,0 +1,16 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "verbose": true,
+  "testPathIgnorePatterns": [
+    "<rootDir>/build/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/__tests__/_global-setup.ts",
+    "<rootDir>/__tests__/_setup.ts",
+    "<rootDir>/__tests__/_cleanup.ts",
+    "<rootDir>/__tests__/_utils.ts",
+    "<rootDir>/__tests__/__fixtures__/*"
+  ],
+  "setupFiles": ["dotenv/config"],
+  "setupFilesAfterEnv": ["jest-extended/all"]
+}
