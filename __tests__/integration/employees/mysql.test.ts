@@ -4,6 +4,7 @@ import {
   getEmployeeByNumber,
   insertEmployee,
   saveEmployee,
+  listEmployees,
 } from '../../../src/employees/mysql';
 import db from '../../../src/infra/database/knex';
 import { ResourceNotFoundError } from '../../../src/errors';
@@ -43,6 +44,50 @@ describe('Mysql Persistence', () => {
 
     it('should throw error when employee does not exist', async () => {
       expect(() => getEmployeeByNumber(-1)).rejects.toThrow(
+        ResourceNotFoundError
+      );
+    });
+  });
+
+  describe('listEmployees', () => {
+    it('should retrieve employees with provided limit', async () => {
+      const limit = 3;
+      const results = await listEmployees({ limit });
+
+      expect(results.length).toBe(limit);
+      expect(results).toEqual(expect.arrayContaining([expectEmployee()]));
+    });
+
+    it('should retrieve employees with default limit of 10', async () => {
+      const results = await listEmployees({});
+      expect(results.length).toBe(10);
+      expect(results).toEqual(expect.arrayContaining([expectEmployee()]));
+    });
+
+    it('should retrieve employees filtered by title with provided limit', async () => {
+      const limit = 3;
+      const title = 'Staff';
+      const results = await listEmployees({ limit, title });
+      expect(results.length).toEqual(limit);
+      expect(results).toEqual(expect.arrayContaining([expectEmployee()]));
+      results.forEach((employee) => {
+        expect(employee.title).toEqual(title);
+      });
+    });
+
+    it('should retreive employees filtered by title with default limit', async () => {
+      const title = 'Staff';
+      const results = await listEmployees({ title });
+      expect(results.length).toEqual(10);
+      expect(results).toEqual(expect.arrayContaining([expectEmployee()]));
+      results.forEach((employee) => {
+        expect(employee.title).toEqual(title);
+      });
+    });
+
+    it('should throw error when employee does not exist', async () => {
+      const title = 'wrongTitle';
+      expect(() => listEmployees({ title })).rejects.toThrow(
         ResourceNotFoundError
       );
     });

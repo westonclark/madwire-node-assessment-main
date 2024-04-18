@@ -11,12 +11,14 @@ import {
   getEmployeeByNumber,
   insertEmployee,
   saveEmployee,
+  listEmployees,
 } from '../../../src/employees/mysql';
 import { mockDependency } from '../../_utils';
 import { ResourceNotFoundError } from '../../../src/errors';
 
 jest.mock('../../../src/employees/mysql');
 const mockGetEmployeeByNumber = mockDependency(getEmployeeByNumber);
+const mockListEmployees = mockDependency(listEmployees);
 const mockInsertEmployee = mockDependency(insertEmployee);
 const mockSaveEmployee = mockDependency(saveEmployee);
 const mockDeleteEmployee = mockDependency(deleteEmployeeByNumber);
@@ -53,6 +55,21 @@ describe('employees service', () => {
         new ResourceNotFoundError('employee not found')
       );
       expect(() => getEmployee(1)).rejects.toThrow(ResourceNotFoundError);
+    });
+  });
+
+  describe('getEmployees', () => {
+    it('should pass filter options to db method', async () => {
+      mockListEmployees.mockResolvedValueOnce([]);
+
+      const filterOpts = {
+        limit: 10,
+        title: 'test',
+      };
+      await listEmployees(filterOpts);
+
+      expect(mockListEmployees).toHaveBeenCalledOnce();
+      expect(mockListEmployees).toHaveBeenCalledWith(filterOpts);
     });
   });
 
