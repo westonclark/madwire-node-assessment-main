@@ -1,14 +1,22 @@
 import {
   deleteEmployeeByNumber,
-  getEmployeesByTitle,
+  listEmployees,
   getEmployeeByNumber,
   insertEmployee,
   saveEmployee,
 } from './mysql';
-import { Employee, EmployeePatch, NewEmployee } from './types';
+import {
+  Employee,
+  EmployeeWithTitle,
+  EmployeePatch,
+  NewEmployee,
+  EmployeesFilterOptions,
+} from './types';
 
-export async function getEmployees(limit: number): Promise<Employee[]> {
-  return getEmployeesByTitle(limit);
+export async function getEmployees(
+  employeesFilterOptions: EmployeesFilterOptions
+): Promise<EmployeeWithTitle[]> {
+  return listEmployees(employeesFilterOptions);
 }
 
 export async function getEmployee(employeeNumber: number): Promise<Employee> {

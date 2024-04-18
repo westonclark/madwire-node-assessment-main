@@ -13,5 +13,14 @@ export type Employee = {
   gender: Gender;
 };
 
+export type EmployeesFilterOptions = {
+  title?: string;
+  limit?: number;
+};
+
+export interface EmployeeWithTitle extends Employee {
+  title?: string;
+}
+
 export type EmployeePatch = Partial<Employee>;
 export type NewEmployee = Omit<Employee, 'employeeNumber'>;

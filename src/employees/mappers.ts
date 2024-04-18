@@ -1,5 +1,11 @@
 import { Static } from '@fastify/type-provider-typebox';
-import { Employee, EmployeePatch, Gender, NewEmployee } from './types';
+import {
+  EmployeeWithTitle,
+  Employee,
+  EmployeePatch,
+  Gender,
+  NewEmployee,
+} from './types';
 import {
   employeeSchema,
   newEmployeeSchema,

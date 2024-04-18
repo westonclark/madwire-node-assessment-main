@@ -1,5 +1,10 @@
 import db from '../infra/database/knex';
-import { Employee, Gender } from './types';
+import {
+  Employee,
+  EmployeesFilterOptions,
+  Gender,
+  EmployeeWithTitle,
+} from './types';
 import { ResourceNotFoundError } from '../errors';
 
 type EmployeeModel = {
@@ -9,9 +14,10 @@ type EmployeeModel = {
   last_name: string;
   gender: Gender;
   hire_date: Date;
+  title?: string;
 };
 
-function fromDb(emp: EmployeeModel): Employee {
+function fromDb(emp: EmployeeModel): EmployeeWithTitle {
   return {
     employeeNumber: emp.emp_no,
     birthDate: emp.birth_date,
@@ -19,6 +25,7 @@ function fromDb(emp: EmployeeModel): Employee {
     lastName: emp.last_name,
     gender: emp.gender,
     hireDate: emp.hire_date,
+    title: emp.title,
   };
 }
 
@@ -33,16 +40,29 @@ function forDb(emp: Employee): EmployeeModel {
   };
 }
 
-export async function getEmployeesByTitle(limit: number): Promise<Employee[]> {
-  const employees = await db<EmployeeModel>('employees')
-    .select('*')
-    .limit(limit);
+const DEFAULT_LIMIT = 10;
+
+export async function listEmployees({
+  limit = DEFAULT_LIMIT,
+  ...filter
+}: EmployeesFilterOptions): Promise<EmployeeWithTitle[]> {
+  let employees;
+
+  if (filter.title) {
+    employees = await db<EmployeeModel>('employees')
+      .select('employees.*', 'titles.title')
+      .innerJoin('titles', 'employees.emp_no', '=', 'titles.emp_no')
+      .where('titles.title', filter.title)
+      .limit(limit);
+  } else {
+    employees = await db<EmployeeModel>('employees').select('*').limit(limit);
+  }
 
   if (!employees || employees.length == 0) {
     throw new ResourceNotFoundError('employees not found');
   }
 
-  return employees.map((employee) => fromDb(employee));
+  return employees.map(fromDb);
 }
 
 export async function getEmployeeByNumber(

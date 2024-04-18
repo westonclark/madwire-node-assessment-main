@@ -27,6 +27,7 @@ export const employeeSchema = Type.Object({
   birthDate: Type.String({ format: 'date' }),
   hireDate: Type.String({ format: 'date' }),
   gender: Type.Enum({ male: 'M', female: 'F', other: 'O' }),
+  title: Type.Optional(Type.String({ minLength: 1, maxLength: 50 })),
 });
 
 export const newEmployeeSchema = Type.Omit(employeeSchema, ['employeeNumber']);
@@ -42,6 +43,7 @@ export const createEmployeeSchema = {
 export const getEmployeesSchema = {
   querystring: Type.Object({
     limit: Type.Optional(Type.Integer({ minimum: 1 })),
+    title: Type.Optional(Type.String({ minLength: 1, maxLength: 50 })),
   }),
   response: {
     '200': Type.Array(employeeSchema),

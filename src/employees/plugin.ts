@@ -44,11 +44,9 @@ const getEmployeesOptions = {
     request: FastifyRequestTypebox<typeof this.schema>,
     reply: FastifyReplyTypebox<typeof this.schema>
   ) {
-    const employees = await getEmployees(
-      request.query.limit ? request.query.limit : 10
-    );
+    const employees = await getEmployees(request.query);
 
-    reply.send(employees.map((employee) => forResponse(employee)));
+    reply.send(employees.map(forResponse));
   },
 };
 
