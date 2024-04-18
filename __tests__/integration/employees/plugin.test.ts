@@ -80,5 +80,53 @@ describe('employees plugin', () => {
         expect(emp.title.toLowerCase()).toEqual(title.toLowerCase());
       });
     });
+
+    it('should return a 404 code and error message when an employee with title is not found', async () => {
+      const title = 'badTitle';
+
+      const response = await server.inject({
+        method: 'GET',
+        url: `employees?title=${title}`,
+      });
+
+      expect(response.statusCode).toBe(404);
+      expect(response.json()).toHaveProperty('error');
+    });
+
+    it('should return a 400 code and error message when an empty title query parameter is sent', async () => {
+      const title = '';
+
+      const response = await server.inject({
+        method: 'GET',
+        url: `employees?title=${title}`,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.json()).toHaveProperty('error');
+    });
+
+    it('should return a 400 code and error message when an empty limit query parameter is sent', async () => {
+      const limit = '';
+
+      const response = await server.inject({
+        method: 'GET',
+        url: `employees?limit=${limit}`,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.json()).toHaveProperty('error');
+    });
+
+    it('should return a 400 code and error message when an title query parameter greater than 50 characters is sent', async () => {
+      const title = '...................................................';
+
+      const response = await server.inject({
+        method: 'GET',
+        url: `employees?title=${title}`,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.json()).toHaveProperty('error');
+    });
   });
 });
