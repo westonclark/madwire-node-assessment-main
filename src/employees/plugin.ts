@@ -13,16 +13,16 @@ import {
 import {
   createEmployeeSchema,
   deleteEmployeeSchema,
-  getEmployeeSchema,
   getEmployeesSchema,
+  getEmployeeSchema,
   patchEmployeeSchema,
 } from './schemas';
 import {
   createEmployee,
   deleteEmployee,
   editEmployee,
-  getEmployee,
   getEmployees,
+  getEmployee,
 } from './service';
 
 const createEmployeeOptions = {
@@ -44,7 +44,9 @@ const getEmployeesOptions = {
     request: FastifyRequestTypebox<typeof this.schema>,
     reply: FastifyReplyTypebox<typeof this.schema>
   ) {
-    const employees = await getEmployees();
+    const employees = await getEmployees(
+      request.query.limit ? request.query.limit : 10
+    );
 
     reply.send(employees.map((employee) => forResponse(employee)));
   },

@@ -40,6 +40,9 @@ export const createEmployeeSchema = {
 };
 
 export const getEmployeesSchema = {
+  querystring: Type.Object({
+    limit: Type.Optional(Type.Integer({ minimum: 1 })),
+  }),
   response: {
     '200': Type.Array(employeeSchema),
   },

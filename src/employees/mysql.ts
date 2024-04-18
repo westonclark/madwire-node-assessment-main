@@ -33,8 +33,10 @@ function forDb(emp: Employee): EmployeeModel {
   };
 }
 
-export async function getEmployeesByTitle(): Promise<Employee[]> {
-  const employees = await db<EmployeeModel>('employees').select('*').limit(10);
+export async function getEmployeesByTitle(limit: number): Promise<Employee[]> {
+  const employees = await db<EmployeeModel>('employees')
+    .select('*')
+    .limit(limit);
 
   if (!employees || employees.length == 0) {
     throw new ResourceNotFoundError('employees not found');
